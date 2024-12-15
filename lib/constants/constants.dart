@@ -12,3 +12,7 @@ class AppColors {
   static const selectTextColor = Color(0XFFFFFFFF);
   static const searchBarColor = Color(0XFF717171);
 }
+
+class TextStyles {
+  static const w600 = TextStyle(fontWeight: FontWeight.w600, fontSize: 18);
+}

@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:patch_test/components/category_component.dart';
 import 'package:patch_test/components/search_bar_component.dart';
+import 'package:patch_test/constants/constants.dart';
+import 'package:patch_test/controllers/discover_controller.dart';
+import 'package:patch_test/models/product_list.dart';
 import 'package:patch_test/screens/models_screens/screen_model.dart';
+import 'package:provider/provider.dart';
 
 class DiscoverScreen extends StatefulWidget {
   const DiscoverScreen({super.key});
@@ -12,7 +16,20 @@ class DiscoverScreen extends StatefulWidget {
 
 class _DiscoverScreenState extends ScreenModel<DiscoverScreen> {
   _DiscoverScreenState();
-  TextEditingController textEditingController = TextEditingController();
+
+  final DiscoverController discoverController = DiscoverController.instance;
+  bool _isLoading = true;
+  late ProductList provider;
+  @override
+  void initState() {
+    super.initState();
+    provider = Provider.of<ProductList>(context, listen: false);
+    provider.loadProducts().then((value) {
+      setState(() {
+        _isLoading = false;
+      });
+    });
+  }
 
   @override
   Widget headerComponent() {
@@ -28,7 +45,7 @@ class _DiscoverScreenState extends ScreenModel<DiscoverScreen> {
             padding: const EdgeInsets.symmetric(horizontal: 10),
             child: SearchBarComponent(
               onChanged: (p0) {},
-              textEditingController: textEditingController,
+              textEditingController: discoverController.filterEditingController,
             ),
           ),
         ),
@@ -38,21 +55,81 @@ class _DiscoverScreenState extends ScreenModel<DiscoverScreen> {
 
   @override
   Widget infoComponent() {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 20),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisAlignment: MainAxisAlignment.start,
-        children: [
-          const SizedBox(height: 46),
-          const Text(
-            "Choose from any category",
-            textAlign: TextAlign.start,
-            style: TextStyle(fontWeight: FontWeight.w600, fontSize: 18),
-          ),
-          const SizedBox(height: 20),
-          CategoryComponent(),
-        ],
+    return _isLoading
+        ? const Expanded(
+            child: Center(
+              child: CircularProgressIndicator(),
+            ),
+          )
+        : Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const SizedBox(height: 46),
+                const Text(
+                  "Choose from any category",
+                  textAlign: TextAlign.start,
+                  style: TextStyles.w600,
+                ),
+                const SizedBox(height: 20),
+                ValueListenableBuilder(
+                  valueListenable: discoverController.selectedCategoryNotifier,
+                  builder: (context, value, child) {
+                    return ValueListenableBuilder<String>(
+                      valueListenable: discoverController.searchQueryNotifier,
+                      builder: (context, searchQuery, child) {
+                        return Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            CategoryComponent(),
+                            const SizedBox(height: 5),
+                            Text(
+                              "${provider.filteredProductCount()} products to choose from",
+                              textAlign: TextAlign.start,
+                              style: TextStyles.w600,
+                            ),
+                            const SizedBox(height: 10),
+                            Row(
+                              children: [
+                                filterButton(label: "Lowest"),
+                                const SizedBox(width: 15),
+                                filterButton(label: "Highest"),
+                              ],
+                            ),
+                          ],
+                        );
+                      },
+                    );
+                  },
+                ),
+              ],
+            ),
+          );
+  }
+
+  Widget filterButton({required String label}) {
+    return ElevatedButton(
+      onPressed: () {
+        setState(() {
+          discoverController.filterButton = label.toLowerCase();
+        });
+      },
+      style: ElevatedButton.styleFrom(
+        minimumSize: const Size(136, 32),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(4),
+        ),
+        backgroundColor: discoverController.filterButton == label.toLowerCase()
+            ? AppColors.primaryColor
+            : AppColors.filterColor,
+      ),
+      child: Text(
+        "$label price first",
+        style: const TextStyle(
+            fontSize: 12,
+            fontWeight: FontWeight.w400,
+            color: AppColors.textColor),
       ),
     );
   }
