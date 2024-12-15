@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:patch_test/models/product_list.dart';
+import 'package:patch_test/screens/index_screen.dart';
 import 'package:provider/provider.dart';
 
 void main() {
@@ -25,7 +26,7 @@ class MyApp extends StatelessWidget {
           colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
           useMaterial3: true,
         ),
-        home: ,
+        home: const IndexScreen(),
       ),
     );
   }
