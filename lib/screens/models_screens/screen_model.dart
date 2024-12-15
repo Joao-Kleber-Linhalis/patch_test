@@ -23,6 +23,8 @@ abstract class ScreenModel<T extends StatefulWidget> extends State<T> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.start,
         children: [
           headerComponent(),
           infoComponent(),
