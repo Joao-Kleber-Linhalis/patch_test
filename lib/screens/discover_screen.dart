@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:patch_test/components/category_component.dart';
 import 'package:patch_test/components/search_bar_component.dart';
 import 'package:patch_test/screens/models_screens/screen_model.dart';
 
@@ -37,16 +38,20 @@ class _DiscoverScreenState extends ScreenModel<DiscoverScreen> {
 
   @override
   Widget infoComponent() {
-    return const Padding(
-      padding: EdgeInsets.symmetric(horizontal: 20),
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 20),
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.start,
         children: [
-          SizedBox(height: 46),
-          Text(
+          const SizedBox(height: 46),
+          const Text(
             "Choose from any category",
             textAlign: TextAlign.start,
             style: TextStyle(fontWeight: FontWeight.w600, fontSize: 18),
           ),
+          const SizedBox(height: 20),
+          CategoryComponent(),
         ],
       ),
     );
