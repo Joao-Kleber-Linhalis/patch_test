@@ -13,7 +13,7 @@ class SearchBarComponent extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SearchBar(
-      backgroundColor: const WidgetStatePropertyAll(Colors.white),
+      backgroundColor: const WidgetStatePropertyAll(AppColors.white),
       shape: WidgetStateProperty.all<RoundedRectangleBorder>(
         RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(8),

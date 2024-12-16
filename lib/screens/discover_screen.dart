@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:patch_test/components/category_component.dart';
+import 'package:patch_test/components/product_grid_component.dart';
 import 'package:patch_test/components/search_bar_component.dart';
 import 'package:patch_test/constants/constants.dart';
 import 'package:patch_test/controllers/discover_controller.dart';
@@ -61,49 +62,47 @@ class _DiscoverScreenState extends ScreenModel<DiscoverScreen> {
               child: CircularProgressIndicator(),
             ),
           )
-        : Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const SizedBox(height: 46),
-                const Text(
-                  "Choose from any category",
-                  textAlign: TextAlign.start,
-                  style: TextStyles.w600,
-                ),
-                const SizedBox(height: 20),
-                ValueListenableBuilder(
-                  valueListenable: discoverController.selectedCategoryNotifier,
-                  builder: (context, value, child) {
-                    return ValueListenableBuilder<String>(
-                      valueListenable: discoverController.searchQueryNotifier,
-                      builder: (context, searchQuery, child) {
-                        return Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            CategoryComponent(),
-                            const SizedBox(height: 5),
-                            Text(
-                              "${provider.filteredProductCount()} products to choose from",
-                              textAlign: TextAlign.start,
-                              style: TextStyles.w600,
-                            ),
-                            const SizedBox(height: 10),
-                            Row(
-                              children: [
-                                filterButton(label: "Lowest"),
-                                const SizedBox(width: 15),
-                                filterButton(label: "Highest"),
-                              ],
-                            ),
-                          ],
-                        );
-                      },
-                    );
-                  },
-                ),
-              ],
+        : Expanded(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 15),
+              child: ValueListenableBuilder(
+                valueListenable: discoverController.selectedCategoryNotifier,
+                builder: (context, value, child) {
+                  return ValueListenableBuilder<String>(
+                    valueListenable: discoverController.searchQueryNotifier,
+                    builder: (context, searchQuery, child) {
+                      return Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const SizedBox(height: 46),
+                          const Text(
+                            "Choose from any category",
+                            textAlign: TextAlign.start,
+                            style: TextStyles.w600,
+                          ),
+                          CategoryComponent(),
+                          const SizedBox(height: 5),
+                          Text(
+                            "${provider.filteredProductCount()} products to choose from",
+                            textAlign: TextAlign.start,
+                            style: TextStyles.w600,
+                          ),
+                          const SizedBox(height: 5),
+                          Row(
+                            children: [
+                              filterButton(label: "Lowest"),
+                              const SizedBox(width: 15),
+                              filterButton(label: "Highest"),
+                            ],
+                          ),
+                          // ignore: prefer_const_constructors
+                          ProductGridComponent(), // Do not use `const` here, as the widget needs to be rebuilt when the listener's value changes.
+                        ],
+                      );
+                    },
+                  );
+                },
+              ),
             ),
           );
   }
@@ -112,7 +111,7 @@ class _DiscoverScreenState extends ScreenModel<DiscoverScreen> {
     return ElevatedButton(
       onPressed: () {
         setState(() {
-          discoverController.filterButton = label.toLowerCase();
+          discoverController.priceOrder = label.toLowerCase();
         });
       },
       style: ElevatedButton.styleFrom(
@@ -120,7 +119,7 @@ class _DiscoverScreenState extends ScreenModel<DiscoverScreen> {
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(4),
         ),
-        backgroundColor: discoverController.filterButton == label.toLowerCase()
+        backgroundColor: discoverController.priceOrder == label.toLowerCase()
             ? AppColors.primaryColor
             : AppColors.filterColor,
       ),

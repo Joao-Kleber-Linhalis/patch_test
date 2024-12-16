@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:patch_test/constants/constants.dart';
 import 'package:patch_test/controllers/discover_controller.dart';
 import 'package:patch_test/models/category.dart';
 
-class CategoryItem extends StatelessWidget {
-  CategoryItem({
+class CategoryItemComponent extends StatelessWidget {
+  CategoryItemComponent({
     super.key,
     required this.category,
   });
@@ -42,7 +43,7 @@ class CategoryItem extends StatelessWidget {
                 padding: const EdgeInsets.all(3),
                 child: Container(
                   decoration: BoxDecoration(
-                    color: Colors.white,
+                    color: AppColors.white,
                     borderRadius: BorderRadius.circular(100),
                   ),
                   child: Padding(
@@ -60,7 +61,7 @@ class CategoryItem extends StatelessWidget {
                 ),
               ),
             ),
-            const SizedBox(height: 15),
+            const SizedBox(height: 5),
             Text(
               category.label,
               style: const TextStyle(

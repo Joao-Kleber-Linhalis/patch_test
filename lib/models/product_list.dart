@@ -5,6 +5,7 @@ import 'package:patch_test/constants/constants.dart';
 import 'package:patch_test/controllers/discover_controller.dart';
 import 'package:patch_test/models/product.dart';
 import 'package:http/http.dart' as http;
+import 'package:diacritic/diacritic.dart';
 
 class ProductList with ChangeNotifier {
   List<Product> _items = [];
@@ -33,18 +34,34 @@ class ProductList with ChangeNotifier {
   List<Product> filterProducts() {
     final category = DiscoverController.instance.selectedCategoryNotifier.value;
     final title = DiscoverController.instance.filterEditingController.text;
+    final orderPrice = DiscoverController.instance.priceOrder;
     List<Product> filteredProducts = _items;
 
+    // filter by category
     if (category.isNotEmpty) {
       filteredProducts = filteredProducts
           .where((product) => product.category == category)
           .toList();
     }
 
+    // filter by title
     if (title.isNotEmpty) {
-      filteredProducts = filteredProducts
-          .where((product) => product.title.contains(title))
-          .toList();
+      final normalizedTitle = removeDiacritics(title.toLowerCase().trim());
+
+      filteredProducts = filteredProducts.where((product) {
+        final normalizedProductTitle =
+            removeDiacritics(product.title.toLowerCase());
+        return normalizedProductTitle.contains(normalizedTitle);
+      }).toList();
+    }
+
+    // order by price
+    if (orderPrice.isNotEmpty) {
+      if (orderPrice == 'lowest') {
+        filteredProducts.sort((a, b) => a.price.compareTo(b.price));
+      } else if (orderPrice == 'highest') {
+        filteredProducts.sort((a, b) => b.price.compareTo(a.price));
+      }
     }
 
     return filteredProducts;

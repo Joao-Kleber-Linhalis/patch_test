@@ -16,13 +16,19 @@ class DiscoverController {
   ValueNotifier<String> selectedCategoryNotifier = ValueNotifier<String>("");
   TextEditingController filterEditingController = TextEditingController();
   ValueNotifier<String> searchQueryNotifier = ValueNotifier<String>("");
-  String filterButton = '';
+  String priceOrder = '';
 
   void _onFilterChanged() {
     searchQueryNotifier.value = filterEditingController.text;
   }
 
   void onItemTapped(String category) {
-    selectedCategoryNotifier.value = category;
+    print(category);
+    if (selectedCategoryNotifier.value == category) {
+      selectedCategoryNotifier.value = "";
+    } else {
+      selectedCategoryNotifier.value = category;
+    }
+    print(selectedCategoryNotifier.value);
   }
 }

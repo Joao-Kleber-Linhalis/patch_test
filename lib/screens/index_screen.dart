@@ -31,7 +31,7 @@ class _IndexScreenState extends State<IndexScreen> {
       valueListenable: screenController.selectedIndexNotifier,
       builder: (context, selectedIndex, child) {
         return Scaffold(
-          backgroundColor: Colors.white,
+          backgroundColor: AppColors.white,
           body: Center(
             child: _widgetOptions.elementAt(selectedIndex),
           ),

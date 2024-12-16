@@ -11,6 +11,8 @@ class AppColors {
   static const selectIndex = Color(0XFFB45A9B);
   static const selectTextColor = Color(0XFFFFFFFF);
   static const searchBarColor = Color(0XFF717171);
+  static const descriptionColor = Color(0XFF7C7C7C);
+  static const white = Color(0XFFFFFFFF);
 }
 
 class TextStyles {
