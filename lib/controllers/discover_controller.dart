@@ -23,12 +23,10 @@ class DiscoverController {
   }
 
   void onItemTapped(String category) {
-    print(category);
     if (selectedCategoryNotifier.value == category) {
       selectedCategoryNotifier.value = "";
     } else {
       selectedCategoryNotifier.value = category;
     }
-    print(selectedCategoryNotifier.value);
   }
 }
